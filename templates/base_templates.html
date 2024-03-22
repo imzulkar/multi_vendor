@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication</title>
+
+    {% block style_block %}
+    {% endblock %}
+</head>
+<body>
+{% block body_block %}
+
+{% endblock %}
+{#<hr>#}
+{#<h2>Register</h2>#}
+{#<form method="post" action="{% url 'register' %}">#}
+{#    {% csrf_token %}#}
+{#    {% if registration_error %}#}
+{#        <p class="error-message">{{ registration_error }}</p>#}
+{#    {% endif %}#}
+{#    <input type="text" name="username" placeholder="Username" required>#}
+{#    <input type="password" name="password1" placeholder="Password" required>#}
+{#    <input type="password" name="password2" placeholder="Confirm Password" required>#}
+{#    <input type="submit" value="Register">#}
+{#</form>#}
+</body>
+</html>

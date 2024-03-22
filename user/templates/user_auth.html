@@ -1,0 +1,57 @@
+{% extends './templates/base_templates.html' %}
+{% block style_block %}
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        form {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .error-message {
+            color: red;
+        }
+    </style>
+{% endblock %}
+
+{% block body_block %}
+    {% if user.is_authenticated %}
+        <h2>Login</h2>
+        <form method="post" action="{% url 'auth' %}">
+            {% csrf_token %}
+            {% if login_error %}
+                <p class="error-message">{{ login_error }}</p>
+            {% endif %}
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="submit" value="Login">
+        </form>
+    {% endif %}
+
+{% endblock %}
