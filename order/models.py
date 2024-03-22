@@ -19,7 +19,7 @@ class Order(BaseModel):
 
 class OrderItem(BaseModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
-    product = models.ForeignKey(Products, on_delete=models.SET_NULL, related_name='order_items')
+    product = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True, related_name='order_items')
     quantity = models.PositiveIntegerField(default=1)
     price = models.FloatField(default=0.0)  # Store the price at the time of purchase
 
