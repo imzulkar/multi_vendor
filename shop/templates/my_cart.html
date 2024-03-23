@@ -3,6 +3,9 @@
     My Cart
 {% endblock %}
 {% block content %}
+    <div id="successMessage" class="hidden bg-green-200 text-green-800 px-4 py-2 rounded-md mt-4">
+        Order Placed successfully!
+    </div>
     <div class="container mx-auto py-8" id="cart-container">
 
 
@@ -88,6 +91,8 @@
                     }
                     console.log('Order Placed Successfully');
                     fetchCarts();
+                    showSuccessMessage();
+                    
                 })
                 .catch(error => console.error('Error Placing order:', error));
         }

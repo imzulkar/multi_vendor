@@ -4,7 +4,7 @@
 <div class="flex w-full bg-gray-900 py-3">
     <div class="container mx-auto px-4">
         <div class="flex justify-between text-white">
-            <a href="" class="font-semibold text-xl">Multi Vendor</a>
+            <a href="{% url 'shop:shopping_template' %}" class="font-semibold text-xl">Multi Vendor</a>
             <div class="flex gap-4 text-md">
                 {% if user.is_authenticated %}
                     {% if user.user_type == "seller" %}

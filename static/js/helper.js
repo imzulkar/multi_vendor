@@ -26,3 +26,13 @@ function decreaseQuantity(inputId) {
         input.value = parseInt(input.value) - 1;
     }
 }
+
+// Function to show the success message
+function showSuccessMessage() {
+    const successMessage = document.getElementById('successMessage');
+    successMessage.classList.remove('hidden');
+    // Hide the success message after 3 seconds
+    setTimeout(() => {
+        successMessage.classList.add('hidden');
+    }, 3000);
+}
