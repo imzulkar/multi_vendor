@@ -10,6 +10,6 @@ def index_view(request):
     if user.is_authenticated:
         if request.user.user_type == "SELLER":
             return HttpResponseRedirect(reverse_lazy('shop:products_list_template'))
-        return HttpResponseRedirect(reverse_lazy('shop:cart_template'))
+        return HttpResponseRedirect(reverse_lazy('shop:shopping_template'))
 
     return HttpResponseRedirect(reverse_lazy('user:auth'))
