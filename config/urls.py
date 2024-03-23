@@ -1,30 +1,21 @@
-"""
-URL configuration for config project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.conf.urls.static import static
+from django.conf import settings
+from django.views.static import serve
 
 import vendor.urls
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", include("user.urls")),
-    path("api/vendor/", include("vendor.urls")),
-    path("api/inventory/", include("inventory.urls")),
-    path("api/cart/", include("cart.urls")),
-    path("api/order/", include("order.urls")),
-    path("api/annalytics/", include("analytics.urls")),
-]
+                  path("admin/", admin.site.urls),
+                  path("", include("user.urls")),
+                  path("vendor/", include("vendor.urls")),
+                  path("inventory/", include("inventory.urls")),
+                  path("cart/", include("cart.urls")),
+                  path("order/", include("order.urls")),
+                  path("annalytics/", include("analytics.urls")),
+              ] + [
+                  re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+                  re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+              ] + static(
+    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

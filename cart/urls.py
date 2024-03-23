@@ -3,5 +3,5 @@ from rest_framework.routers import DefaultRouter
 from .views import CartViewSet
 
 router = DefaultRouter()
-router.register("", CartViewSet, basename="carts")
+router.register("api", CartViewSet, basename="carts")
 urlpatterns = [] + router.urls

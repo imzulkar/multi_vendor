@@ -3,5 +3,5 @@ from order.views import PlaceOrderView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register('', PlaceOrderView, basename='order')
+router.register('api', PlaceOrderView, basename='order')
 urlpatterns = [] + router.urls

@@ -1,18 +1,31 @@
-from django.contrib.auth import authenticate, login
-from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse_lazy
+
+from user.models import User
 
 
 def auth_view(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse_lazy('inventory:products_list_template'))
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
             login(request, user)
-            return render(request, 'user_auth.html', context={'user': user, 'message': 'Login successful.'})
+            return HttpResponseRedirect(reverse_lazy('inventory:products_list_template'))
         else:
 
-            return render(request, 'user_atuh.html', context={'message': 'Login Failed.'})
+            return render(request, 'user_auth.html', context={'message': 'Invalid credentials! Try again!'})
     else:
         return render(request, 'user_auth.html', context={})
+
+
+@login_required
+def logout_View(request):
+    logout(request)
+    return HttpResponseRedirect(reverse_lazy('user:auth'))

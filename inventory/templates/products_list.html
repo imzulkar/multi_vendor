@@ -1,0 +1,80 @@
+{% extends './templates/base_templates.html' %}
+
+{% block content %}
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-semibold mb-4">Product List</h1>
+        <div class="overflow-auto max-h-96" id="product-table-container">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase ">ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase ">Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase ">Price
+                    </th>
+                </tr>
+                </thead>
+                <tbody id="product-table-body">
+
+                </tbody>
+            </table>
+        </div>
+        <div id="loading" class="text-center text-gray-500 mt-4">Loading...</div>
+    </div>
+
+    {% block scripts %}
+        <script>
+            let page = 1;
+            let isLoading = false;
+            let totalPage = 1;
+
+            function fetchProducts() {
+                if (isLoading) return;
+                isLoading = true;
+                document.getElementById('loading').classList.remove('hidden');
+                if (page <= totalPage) {
+                    fetch(`/inventory/api/products/?page=${page}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+                            totalPage = data.total_pages;
+                            showProducts(data.results);
+                            isLoading = false;
+                            document.getElementById('loading').classList.add('hidden');
+                            page++;
+                        })
+                        .catch(error => console.error('Error fetching products:', error));
+                }
+
+
+            }
+
+            function showProducts(products) {
+                const tableBody = document.getElementById('product-table-body');
+
+                products.forEach(product => {
+                    const row = `
+                    <tr>
+                        <td class="px-6 py-4 ">${product.id}</td>
+                        <td class="px-6 py-4 ">${product.name}</td>
+                        <td class="px-6 py-4 ">${product.price}</td>
+                    </tr>
+                `;
+                    tableBody.innerHTML += row;
+                });
+            }
+
+            let productTableContainer = document.getElementById('product-table-container');
+
+            productTableContainer.addEventListener('scroll', () => {
+
+                if (productTableContainer.scrollTop > productTableContainer.offsetHeight - 70) {
+                    fetchProducts();
+                }
+            });
+
+            window.addEventListener('load', () => {
+                fetchProducts();
+            });
+        </script>
+    {% endblock %}
+{% endblock %}

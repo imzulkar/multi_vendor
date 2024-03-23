@@ -12,5 +12,5 @@ class ProductsViewSet(ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_authenticated:
             if self.request.user.user_type == 'SELLER':
-                return self.queryset.filter(vendor=self.request.user.vendor_user.vendor)
+                return self.queryset.filter(vendor=self.request.user.vendor_user)
         return self.queryset
