@@ -1,7 +1,10 @@
 from django.db import transaction
 from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from cart.models import Cart, CartItems
+from inventory.models import Products
 from utils.helper import cart_price_calculator
+from vendor.models import Vendor
 
 
 class CartItemsSerializer(ModelSerializer):
@@ -33,7 +36,7 @@ class CartSerializer(ModelSerializer):
             product = item.pop('product')
             quantity = item.pop('quantity')
             # product price calculator
-            total_price = cart_price_calculator(product, quantity)
+            total_price = cart_price_calculator(product.price, quantity)
             grand_total += total_price
             total_items += quantity
             bulk_object.append(CartItems(cart=cart, product=product, quantity=quantity, total_price=total_price))
@@ -45,3 +48,26 @@ class CartSerializer(ModelSerializer):
 
         cart.save(update_fields=['total_price', 'quantity'])
         return cart
+
+
+class AddToCartSerializer(serializers.Serializer):
+    vendor = serializers.SlugRelatedField(slug_field='id', queryset=Vendor.objects.all())
+    product = serializers.SlugRelatedField(slug_field='id', queryset=Products.objects.all())
+    quantity = serializers.IntegerField()
+
+    def create(self, validated_data):
+
+        vendor = validated_data.get('vendor')
+        product = validated_data.get('product')
+        quantity = validated_data.get('quantity')
+        # calculate the total price of the product
+        total_price = cart_price_calculator(product.price, quantity)
+        request = self.context.get('request')
+        cart = Cart.objects.filter(user=request.user, vendor=vendor)
+        # check if the cart exists
+        if cart.exists():
+            cart = cart.first()
+        else:
+            cart = Cart.objects.create(user=request.user, vendor=vendor)
+        cart_item = CartItems.objects.create(cart=cart, product=product, quantity=quantity, total_price=total_price)
+        return cart_item

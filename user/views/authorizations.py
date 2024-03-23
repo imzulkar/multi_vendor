@@ -9,7 +9,7 @@ from user.models import User
 
 def auth_view(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse_lazy('inventory:products_list_template'))
+        return HttpResponseRedirect(reverse_lazy('shop:index_template'))
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -17,7 +17,9 @@ def auth_view(request):
 
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse_lazy('inventory:products_list_template'))
+            if user.user_type == "SELLER":
+                return HttpResponseRedirect(reverse_lazy('shop:products_list_template'))
+            return HttpResponseRedirect(reverse_lazy('shop:index_template'))
         else:
 
             return render(request, 'user_auth.html', context={'message': 'Invalid credentials! Try again!'})

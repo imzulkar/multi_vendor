@@ -32,7 +32,7 @@
                 isLoading = true;
                 document.getElementById('loading').classList.remove('hidden');
                 if (page <= totalPage) {
-                    fetch(`/inventory/api/products/?page=${page}`)
+                    fetch(`/api/inventory/products/?page=${page}`)
                         .then(response => response.json())
                         .then(data => {
                             console.log(data);

@@ -1,2 +1,2 @@
-def cart_price_calculator(product, quantity) -> int:
-    return int(product.price * quantity)
+def cart_price_calculator(price, quantity) -> int:
+    return int(price * quantity)
