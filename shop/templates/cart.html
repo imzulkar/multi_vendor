@@ -16,11 +16,11 @@
         let page = 1;
         let isLoading = false;
         let totalPage = 1;
+        let authenticated = {{ user.is_authenticated|lower }};
 
         function fetchProducts() {
             if (isLoading) return;
             isLoading = true;
-            {#document.getElementById('loading').classList.remove('hidden');#}
             if (page <= totalPage) {
                 fetch(`/api/inventory/products/?page=${page}`)
                     .then(response => response.json())
@@ -42,21 +42,27 @@
             const productContainer = document.getElementById('product-container');
 
             products.forEach(product => {
-                const row = `
-                    <div class="bg-white p-4 shadow-md rounded-md">
+                const row = `<div class="bg-white p-4 shadow-md rounded-md grid grid-rows-auto-1">
             <img src="${product.image ? product.image : 'https://via.placeholder.com/150'}" alt="Product Image"
                  class="w-full h-48 object-cover object-center">
             <div class="flex justify-between items-center">
                 <h1 class="text-lg font-bold">${product.name}</h1>
                 <span class="text-sm font-bold text-gray-500">${product.price}</span>
             </div>
-             <div class="flex items-center mt-2">
-                    <button class="bg-gray-300 text-gray-700 px-2 py-1 rounded-md mr-2" onclick="decreaseQuantity('quantity${product.id}')">-</button>
-                    <input type="number" id="quantity${product.id}" value="1" min="1" class="border rounded-md px-2 py-1 mr-2" style="width: 50px;">
-                    <button class="bg-gray-300 text-gray-700 px-2 py-1 rounded-md" onclick="increaseQuantity('quantity${product.id}')">+</button>
-                </div>
-            <div class="">
-                <button class="bg-green-400 text-white px-2 py-2 rounded-md mt-2" onclick="addToCart(${product.id}, ${product.vendor})">Add To Cart</button>
+            <div class="flex justify-center items-center mt-2">
+                <button class="bg-gray-300 text-gray-700 px-2 py-1 rounded-md mr-2"
+                        onclick="decreaseQuantity('quantity${product.id}')">-
+                </button>
+                <input type="number" id="quantity${product.id}" value="1" min="1"
+                       class="border rounded-md px-2 py-1 mr-2" style="width: 50px;">
+                <button class="bg-gray-300 text-gray-700 px-2 py-1 rounded-md"
+                        onclick="increaseQuantity('quantity${product.id}')">+
+                </button>
+            </div>
+            <div class="cart-button-container">
+                <button class="bg-green-400 text-white px-2 py-2 rounded-md w-full"
+                        onclick="addToCart(${product.id}, ${product.vendor})">Add To Cart
+                </button>
             </div>
         </div>`;
                 productContainer.innerHTML += row;
@@ -65,6 +71,9 @@
 
         // add to cart
         function addToCart(productId, vendorId) {
+            if (!authenticated) {
+                window.location.href = '/user/';
+            }
             const csrftoken = getCookie('csrftoken');
             const quantityInput = document.getElementById(`quantity${productId}`);
             const quantity = parseInt(quantityInput.value);
@@ -85,7 +94,7 @@
                         throw new Error('Failed to add item to cart');
                     }
                     console.log('Item added to cart successfully');
-                    
+
                 })
                 .catch(error => console.error('Error adding item to cart:', error));
         }
