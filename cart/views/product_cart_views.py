@@ -9,6 +9,9 @@ class CartViewSet(ModelViewSet):
     serializer_class = CartSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
+
     def get_queryset(self):
         # if the user is authenticated and the user is a seller then return the cart of the seller or return the cart of the user
         # print(self.request.user.vendor_user)
