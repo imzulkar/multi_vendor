@@ -12,7 +12,7 @@ app = Celery()
 
 
 @app.task
-def calculate_daily_order_summary(date=datetime.today().date() - timedelta(days=1)):
+def calculate_daily_order_summary(date=datetime.today().date()):
     vendors = Vendor.objects.prefetch_related('orders_vendors')
     for vendor in vendors:
         with transaction.atomic():

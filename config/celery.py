@@ -16,7 +16,7 @@ today = datetime.today().date()
 app.conf.beat_schedule = {
     "periodic_task": {
         "task": "analytics.tasks.calculate_daily_order_summary",
-        "schedule": crontab(hour=0, minute=1),
+        "schedule": crontab(hour=22, minute=18),
         # "schedule": 10,
         "args": {today - timedelta(days=1)},
     }
