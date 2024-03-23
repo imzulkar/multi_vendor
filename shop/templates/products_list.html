@@ -42,7 +42,12 @@
                             document.getElementById('loading').classList.add('hidden');
                             page++;
                         })
-                        .catch(error => console.error('Error fetching products:', error));
+                        .catch(error => {
+                            console.error('Error fetching products:', error);
+                        });
+                } else {
+                    isLoading = false;
+                    document.getElementById('loading').classList.add('hidden');
                 }
 
 
