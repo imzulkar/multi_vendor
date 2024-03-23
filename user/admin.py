@@ -1,5 +1,3 @@
-from django.contrib import admin
-from user.models import User
+from utils.admin_register import register_models
 
-# Register your models here.
-admin.site.register(User)
+register_models(app_name="user")
