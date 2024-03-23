@@ -63,6 +63,7 @@
             });
         }
 
+        // add to cart
         function addToCart(productId, vendorId) {
             const csrftoken = getCookie('csrftoken');
             const quantityInput = document.getElementById(`quantity${productId}`);
@@ -84,39 +85,11 @@
                         throw new Error('Failed to add item to cart');
                     }
                     console.log('Item added to cart successfully');
-                    // You can optionally do something here after the item is added to cart
+                    
                 })
                 .catch(error => console.error('Error adding item to cart:', error));
         }
 
-        // get session cookie
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        // quantity increase and decrease
-        function increaseQuantity(inputId) {
-            const input = document.getElementById(inputId);
-            input.value = parseInt(input.value) + 1;
-        }
-
-        function decreaseQuantity(inputId) {
-            const input = document.getElementById(inputId);
-            if (parseInt(input.value) > 1) {
-                input.value = parseInt(input.value) - 1;
-            }
-        }
 
         window.addEventListener('scroll', () => {
             console.log(window.scrollY, window.innerHeight)

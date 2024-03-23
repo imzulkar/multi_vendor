@@ -1,13 +1,23 @@
 from django.db import transaction
+from django.db.models import Sum, Count
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 from cart.models import Cart, CartItems
 from inventory.models import Products
+from user.models import User
 from utils.helper import cart_price_calculator
 from vendor.models import Vendor
 
 
+class CartProductsSerializer(ModelSerializer):
+    class Meta:
+        model = Products
+        fields = ['id', 'name', 'price', 'image']
+
+
 class CartItemsSerializer(ModelSerializer):
+    product = CartProductsSerializer(read_only=True)
+
     class Meta:
         model = CartItems
         fields = "__all__"
@@ -70,4 +80,8 @@ class AddToCartSerializer(serializers.Serializer):
         else:
             cart = Cart.objects.create(user=request.user, vendor=vendor)
         cart_item = CartItems.objects.create(cart=cart, product=product, quantity=quantity, total_price=total_price)
+        total = CartItems.objects.filter(cart=cart).aggregate(total=Sum('total_price'), item=Count('product'))
+        cart.total_price = total['total']
+        cart.quantity = total['item']
+        cart.save(update_fields=['total_price', 'quantity'])
         return cart_item

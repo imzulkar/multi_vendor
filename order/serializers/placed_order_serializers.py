@@ -12,7 +12,7 @@ class OrderItemSerializer(ModelSerializer):
 
 
 class PlacedOrderSerializer(ModelSerializer):
-    cart = serializers.SlugRelatedField(queryset=Cart.objects.all(), slug_field='id')
+    cart = serializers.SlugRelatedField(queryset=Cart.objects.all(), slug_field='id', write_only=True)
     order_items = OrderItemSerializer(many=True, read_only=True)
 
     class Meta:
@@ -24,7 +24,7 @@ class PlacedOrderSerializer(ModelSerializer):
     @transaction.atomic
     def create(self, validated_data):
         cart = validated_data.pop('cart')
-        order = Order.objects.create(total_amount=cart.total_amount, vendor=cart.vendor, user=cart.user)
+        order = Order.objects.create(total_amount=cart.total_price, vendor=cart.vendor, user=cart.user)
         # add all the items in the cart to the order items
         for item in cart.cart_item.all():
             OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity, price=item.total_price)

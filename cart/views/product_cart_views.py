@@ -6,13 +6,9 @@ from cart.models import Cart, CartItems
 from cart.serializers import CartSerializer, CartItemsSerializer, AddToCartSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-from inventory.models import Products
-from utils.helper import cart_price_calculator
-from vendor.models import Vendor
-
 
 class CartViewSet(ModelViewSet):
-    queryset = Cart.objects.prefetch_related('cart_item')
+    queryset = Cart.objects.prefetch_related('cart_item__product').select_related('vendor')
     serializer_class = CartSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -33,7 +29,6 @@ class CartViewSet(ModelViewSet):
             return Cart.objects.filter(user=self.request.user)
 
     def add_to_cart(self, request, *args, **kwargs):
-        print(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
