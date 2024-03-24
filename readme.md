@@ -69,21 +69,21 @@ celery -A config worker --loglevel=info eventlet
 celery -A config beat --loglevel=info
 ```
 
-##User credentials 
+## User credentials 
 
-###Seller Accounts:
+### Seller Accounts:
 ```bash
-Username: seller1, 
+Username: seller1
 Password: seller1@123
 
-Username: seller2, 
+Username: seller2
 Password: seller2@123
 ```
-###Customer Accounts:
+### Customer Accounts:
 ```bash
-Username: customer1, 
+Username: customer1
 Password: customer1@123
 
-Username: customer2, 
+Username: customer2
 Password: customer2@123
 ```
